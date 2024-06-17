@@ -19,30 +19,59 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useState, useTransition } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import {
-	RegisterSchema,
-	registerSchema,
-} from '@/lib/schemas';
+import { RegisterSchema, registerSchema } from '@/lib/schemas';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { useToast } from './ui/use-toast';
+import { registerUser } from '../lib/actions';
 
-export default function RegisterForm({setMode}: {
+export default function RegisterForm({
+	setMode,
+	onOpenChange,
+}: {
 	setMode: Dispatch<SetStateAction<boolean>>;
+	onOpenChange: Dispatch<SetStateAction<boolean>>;
 }) {
+	const session = useSession();
+
+	const router = useRouter();
 	const [showPassword, setShowPassword] = useState(false);
 
-	const loginForm = useForm<RegisterSchema>({
+	const { toast } = useToast();
+
+	const [isPending, startTransition] = useTransition();
+
+	const registerForm = useForm<RegisterSchema>({
 		resolver: zodResolver(registerSchema),
 		defaultValues: {
 			email: '',
-            name: '',
-            username: '',
+			name: '',
+			username: '',
 			password: '',
 		},
 	});
 	function onSubmit(values: RegisterSchema) {
-		console.log(values);
+		startTransition(() => {
+			session.status === 'unauthenticated' &&
+				registerUser(values)
+					.then(res => {
+						toast({
+							title: res.message,
+							variant: 'success',
+						});
+						router.refresh();
+						onOpenChange(false);
+					})
+					.catch(err => {
+						toast({
+							title: (err as Error).message,
+							variant: 'destructive',
+						});
+					});
+		});
 	}
 	return (
 		<Card className='mx-auto border-0 w-full'>
@@ -53,51 +82,54 @@ export default function RegisterForm({setMode}: {
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
-				<Form {...loginForm}>
+				<Form {...registerForm}>
 					<form
-						onSubmit={loginForm.handleSubmit(onSubmit)}
+						onSubmit={registerForm.handleSubmit(onSubmit)}
 						className='space-y-3'>
 						<FormField
-							control={loginForm.control}
+							control={registerForm.control}
 							name='name'
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Name</FormLabel>
 									<FormControl>
-										<Input placeholder='John Doe'  {...field} />
+										<Input
+											disabled={isPending} placeholder='John Doe' {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
 							)}
 						/>
 						<FormField
-							control={loginForm.control}
+							control={registerForm.control}
 							name='username'
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Username</FormLabel>
 									<FormControl>
-										<Input placeholder='john@56'  {...field} />
+										<Input
+											disabled={isPending} placeholder='john@56' {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
 							)}
 						/>
 						<FormField
-							control={loginForm.control}
+							control={registerForm.control}
 							name='email'
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Email</FormLabel>
 									<FormControl>
-										<Input placeholder='john@doe.com'  {...field} />
+										<Input
+											disabled={isPending} placeholder='john@doe.com' {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
 							)}
 						/>
 						<FormField
-							control={loginForm.control}
+							control={registerForm.control}
 							name='password'
 							render={({ field }) => (
 								<FormItem>
@@ -105,10 +137,10 @@ export default function RegisterForm({setMode}: {
 									<FormControl>
 										<div className='relative'>
 											<Input
+												disabled={isPending}
 												id='password'
 												type={showPassword ? 'text' : 'password'}
-												
-                                                {...field}
+												{...field}
 											/>
 
 											{showPassword ? (
@@ -129,10 +161,10 @@ export default function RegisterForm({setMode}: {
 							)}
 						/>
 
-						<Button type='submit' className='w-full'>
+						<Button disabled={isPending} type='submit' className='w-full'>
 							Register
 						</Button>
-						<Button variant='outline' className='w-full'>
+						<Button disabled={isPending} variant='outline' className='w-full'>
 							Continue with Google
 						</Button>
 					</form>

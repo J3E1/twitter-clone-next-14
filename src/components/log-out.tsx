@@ -1,3 +1,4 @@
+'use client';
 import { LogOutIcon } from 'lucide-react';
 import {
 	Dialog,
@@ -11,10 +12,40 @@ import {
 } from './ui/dialog';
 import TwitterIcon from './twitter-icon';
 import { Button } from './ui/button';
+import { signOut } from 'next-auth/react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { toast } from './ui/use-toast';
 
 export default function LogoutButton() {
+	const router = useRouter();
+
+	const [isLoading, setIsLoading] = useState(false);
+	const [open, setOpen] = useState(false);
+
+	const logoutHandler = async () => {
+		try {
+			setIsLoading(true);
+			await signOut({ redirect: false });
+			router.replace('/');
+			router.refresh();
+			setOpen(false);
+			setIsLoading(false);
+			toast({
+				title: 'Logged out',
+				variant: 'success',
+			});
+		} catch (error) {
+			setIsLoading(false);
+			toast({
+				title: (error as Error).message,
+				variant: 'destructive',
+			});
+		}
+	};
+
 	return (
-		<Dialog>
+		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
 				<button className='flex items-center space-x-4 px-4 lg:pl-4 lg:pr-5 py-3 hover:bg-foreground/10 text-foreground my-1 max-w-fit rounded-full'>
 					<LogOutIcon className='w-6 h-6' />
@@ -34,11 +65,20 @@ export default function LogoutButton() {
 					</DialogDescription>
 				</DialogHeader>
 				<div className='space-y-3'>
-					<Button type='button' className='w-full'>
+					<Button
+						type='button'
+						disabled={isLoading}
+						className='w-full'
+						onClick={logoutHandler}>
 						Log out
 					</Button>
 					<DialogClose asChild>
-						<Button type='button' variant='secondary' className='w-full'>
+						<Button
+							disabled={isLoading}
+							type='button'
+							id='close-logout'
+							variant='secondary'
+							className='w-full'>
 							Close
 						</Button>
 					</DialogClose>

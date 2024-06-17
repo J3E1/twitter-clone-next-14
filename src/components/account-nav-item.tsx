@@ -1,29 +1,33 @@
+import { auth } from '@/lib/auth';
 import ThemeToggle from './theme-toggle';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Session } from 'next-auth';
 
-type Props = {};
-export default function AccountNavItem({}: Props) {
+type Props = { session: Session | null };
+export default async function AccountNavItem({ session }: Props) {
 	return (
 		<div className='flex flex-1 items-center gap-x-2 px-4 py-8 '>
-			<div className='hidden lg:flex items-center gap-x-3 flex-1'>
-				<div className='flex flex-1 lg:flex-none justify-center lg:justify-start'>
-					<Avatar>
-						<AvatarImage
-							alt={'Roy Quilor'}
-							src={
-								'https://pbs.twimg.com/profile_images/1489998205236527108/q2REh8nW_400x400.jpg'
-							}
-						/>
-						<AvatarFallback>{'RQ'}</AvatarFallback>
-					</Avatar>
+			{session ? (
+				<div className='hidden lg:flex items-center gap-x-3 flex-1'>
+					<div className='flex flex-1 lg:flex-none justify-center lg:justify-start'>
+						<Avatar>
+							{session.user.profileImage ? (
+								<AvatarImage
+									src={session.user.profileImage}
+									alt={session.user.name}
+								/>
+							) : null}
+							<AvatarFallback>{`${session.user.name[0]}`}</AvatarFallback>
+						</Avatar>
+					</div>
+					<div className='hidden lg:flex flex-col'>
+						<p className='text-base font-semibold'>{session.user.name}</p>
+						<p className='text-sm text-muted-foreground font-medium'>
+							@{session.user.username}
+						</p>
+					</div>
 				</div>
-				<div className='hidden lg:flex flex-col'>
-					<p className='text-base font-semibold'>Roy Quilor</p>
-					<p className='text-sm text-muted-foreground font-medium'>
-						@RoyQuilor
-					</p>
-				</div>
-			</div>
+			) : null}
 			<div className=''>
 				<ThemeToggle />
 				{/* <Link href='/'>

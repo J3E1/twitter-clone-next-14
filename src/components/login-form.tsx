@@ -19,17 +19,30 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useState, useTransition } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import {
-	LoginSchema,
-	loginSchema,
-} from '@/lib/schemas';
+import { LoginSchema, loginSchema } from '@/lib/schemas';
+import { signIn, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { signInAction } from '@/lib/actions';
+import { useToast } from './ui/use-toast';
 
-export default function LoginForm({setMode}: {
+export default function LoginForm({
+	setMode,
+	onOpenChange,
+}: {
 	setMode: Dispatch<SetStateAction<boolean>>;
+	onOpenChange: Dispatch<SetStateAction<boolean>>;
 }) {
+	const session = useSession();
+
+	const router = useRouter();
+
+	const [isPending, startTransition] = useTransition();
+
+	const { toast } = useToast();
+
 	const [showPassword, setShowPassword] = useState(false);
 
 	const loginForm = useForm<LoginSchema>({
@@ -39,8 +52,25 @@ export default function LoginForm({setMode}: {
 			password: '',
 		},
 	});
-	function onSubmit(values: LoginSchema) {
-		console.log(values);
+	async function onSubmit(values: LoginSchema) {
+		startTransition(() => {
+			session.status === 'unauthenticated' &&
+				signInAction(values)
+					.then(res => {
+						toast({
+							title: res.message,
+							variant: 'success',
+						});
+						router.refresh();
+						onOpenChange(false);
+					})
+					.catch(err => {
+						toast({
+							title: (err as Error).message,
+							variant: 'destructive',
+						});
+					});
+		});
 	}
 	return (
 		<Card className='mx-auto border-0 w-full'>
@@ -62,7 +92,11 @@ export default function LoginForm({setMode}: {
 								<FormItem>
 									<FormLabel>Email</FormLabel>
 									<FormControl>
-										<Input placeholder='john@doe.com' {...field} />
+										<Input
+											disabled={isPending}
+											placeholder='john@doe.com'
+											{...field}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -77,6 +111,7 @@ export default function LoginForm({setMode}: {
 									<FormControl>
 										<div className='relative'>
 											<Input
+												disabled={isPending}
 												id='password'
 												type={showPassword ? 'text' : 'password'}
 												{...field}
@@ -100,10 +135,10 @@ export default function LoginForm({setMode}: {
 							)}
 						/>
 
-						<Button type='submit' className='w-full'>
+						<Button type='submit' className='w-full' disabled={isPending}>
 							Login
 						</Button>
-						<Button variant='outline' className='w-full'>
+						<Button variant='outline' className='w-full' disabled={isPending}>
 							Continue with Google
 						</Button>
 					</form>
