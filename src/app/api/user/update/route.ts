@@ -14,13 +14,7 @@ const editUserSchema = z.object({
 	coverImage: z.string().optional(),
 });
 
-export const config = {
-	api: {
-		bodyParser: false, // Disallow body parsing, since we'll use multer
-	},
-};
-
-const handler = async (req: NextRequest, res: NextResponse) => {
+export const PUT = async (req: NextRequest, res: NextResponse) => {
 	try {
 		const session = await auth();
 		const currentUserId = session?.user?.id;
@@ -66,4 +60,4 @@ const handler = async (req: NextRequest, res: NextResponse) => {
 	}
 };
 
-export default handler;
+

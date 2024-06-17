@@ -64,7 +64,7 @@ export default function EditProfile({ bio, name, username }: Props) {
 			};
 
 			const res: { message: string } = await fetch('/api/user/update', {
-				method: 'POST',
+				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
 				},
