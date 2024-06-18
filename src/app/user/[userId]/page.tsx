@@ -4,6 +4,11 @@ import UserBio from '@/components/user-bio';
 import UserHero from '@/components/user-hero';
 import { auth } from '@/lib/auth';
 import { getUserById } from '@/lib/queries';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: 'User Profile',
+};
 
 export default async function UserProfile({
 	params,

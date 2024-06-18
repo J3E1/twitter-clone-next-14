@@ -16,17 +16,18 @@ export default function LikeButton({ likes, liked, postId }: Props) {
 			e.stopPropagation();
 			const res = await likePost(postId);
 			router.refresh();
-			toast({
-				title: res.message,
-				variant: 'success',
-				duration: 1000,
-			});
-		} catch (error) {
-			toast({
-				title: (error as Error).message,
-				variant: 'destructive',
-			});
-		}
+			if (res.message) {
+				toast({
+					title: res.message,
+					variant: 'success',
+				});
+			} else {
+				toast({
+					title: res.error,
+					variant: 'destructive',
+				});
+			}
+		} catch (error) {}
 	};
 
 	return (
@@ -40,7 +41,7 @@ export default function LikeButton({ likes, liked, postId }: Props) {
 				<LikeIcon className='w-5 h-5' />
 			) : (
 				<HeartIcon className='w-5 h-5' />
-			)} 
+			)}
 			{likes}
 		</li>
 	);

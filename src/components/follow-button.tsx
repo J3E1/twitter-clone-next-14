@@ -15,16 +15,19 @@ export default function FollowButton({ isFollowing, userId }: Props) {
 			setIsLoading(true);
 			const res = await followAction(userId);
 			router.refresh();
-			toast({
-				title: res.message,
-				variant: 'success',
-			});
+			if (res.message) {
+				toast({
+					title: res.message,
+					variant: 'success',
+				});
+			} else {
+				toast({
+					title: res.error,
+					variant: 'destructive',
+				});
+			}
 			setIsLoading(false);
 		} catch (error) {
-			toast({
-				title: (error as Error).message,
-				variant: 'destructive',
-			});
 			setIsLoading(false);
 		}
 	};

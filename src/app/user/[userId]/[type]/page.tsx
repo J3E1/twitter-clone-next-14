@@ -5,6 +5,13 @@ import { auth } from '@/lib/auth';
 import { getFollowersByUserId } from '@/lib/queries';
 
 type Props = { params: { userId: string; type: 'following' | 'followers' } };
+
+export async function generateMetadata({ params: { type } }: Props) {
+	return {
+		title: type === 'following' ? `Users's Following` : `Users's Followers`,
+	};
+}
+
 export default async function UserFollowDetailsPage({
 	params: { type, userId },
 }: Props) {

@@ -1,5 +1,9 @@
 import LoadingSpinner from '@/components/loading-spinner';
+import { Metadata } from 'next';
 
+export const metadata: Metadata = {
+	title: 'Loading',
+};
 export default function LoadingPage() {
 	return (
 		<div className='flex justify-center items-center mt-72'>

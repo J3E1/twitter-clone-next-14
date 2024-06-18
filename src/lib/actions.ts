@@ -15,8 +15,12 @@ export const signInAction = async (values: LoginSchema) => {
 		revalidatePath('/');
 		return { message: 'Sign in successful' };
 	} catch (error) {
-		console.log('🚀 ~ file: actions.ts:22 ~ signInAction ~ error:', error);
-		throw new Error((error as Error).message);
+		if(error instanceof Error){
+			return { error: error.message}
+		} else {
+			console.log('🚀 ~ file: actions.ts:22 ~ signInAction ~ error:', error);
+			return { error: 'Something went wrong!'}
+		}
 	}
 };
 
@@ -39,8 +43,12 @@ export const postTweet = async (post: FormData) => {
 
 		return { message: 'Tweet created' };
 	} catch (error) {
-		console.log('🚀 ~ file: actions.ts:43 ~ postTweet ~ error:', error);
-		throw new Error((error as Error).message);
+		if(error instanceof Error){
+			return { error: error.message}
+		} else {
+			console.log('🚀 ~ file: actions.ts:43 ~ postTweet ~ error:', error);
+			return { error: 'Something went wrong!'}
+		}
 	}
 };
 
@@ -68,9 +76,12 @@ export const postComment = async (form: FormData, postId: string) => {
 
 		return { message: 'Comment added' };
 	} catch (error) {
-		console.log('🚀 ~ file: actions.ts:106 ~ submitComment ~ error:', error);
-
-		throw new Error((error as Error).message);
+		if(error instanceof Error){
+			return { error: error.message}
+		} else {
+			console.log('🚀 ~ file: actions.ts:106 ~ submitComment ~ error:', error);
+			return { error: 'Something went wrong!'}
+		}
 	}
 };
 
@@ -119,8 +130,12 @@ export const likePost = async (postId: string) => {
 
 		return { message: liked ? 'Liked' : 'Like removed' };
 	} catch (error) {
-		console.log('🚀 ~ file: actions.ts:114 ~ likePost ~ error:', error);
-		throw new Error((error as Error).message);
+		if(error instanceof Error){
+			return { error: error.message}
+		} else {
+			console.log('🚀 ~ file: actions.ts:114 ~ likePost ~ error:', error);
+			return { error: 'Something went wrong!'}
+		}
 	}
 };
 
@@ -181,9 +196,12 @@ export const followAction = async (userId: string) => {
 
 		return { message: followed ? 'Followed' : 'Unfollowed' };
 	} catch (error) {
-		console.log('🚀 ~ file: queries.ts:139 ~ followAction ~ error:', error);
-
-		throw new Error((error as Error).message);
+		if(error instanceof Error){
+			return { error: error.message}
+		} else {
+			console.log('🚀 ~ file: queries.ts:139 ~ followAction ~ error:', error);
+			return { error: 'Something went wrong!'}
+		}
 	}
 };
 
@@ -205,7 +223,11 @@ export const registerUser = async (values: RegisterSchema) => {
 		});
 		return { message: 'Sign up successful' };
 	} catch (error) {
-		console.log('🚀 ~ file: actions.ts:148 ~ registerUser ~ error:', error);
-		throw new Error((error as Error).message);
+		if(error instanceof Error){
+			return { error: error.message}
+		} else {
+			console.log('🚀 ~ file: actions.ts:148 ~ registerUser ~ error:', error);
+			return { error: 'Something went wrong!'}
+		}
 	}
 };

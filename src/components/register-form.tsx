@@ -58,11 +58,18 @@ export default function RegisterForm({
 			session.status === 'unauthenticated' &&
 				registerUser(values)
 					.then(res => {
-						toast({
-							title: res.message,
-							variant: 'success',
-						});
 						router.refresh();
+						if (res.message) {
+							toast({
+								title: res.message,
+								variant: 'success',
+							});
+						} else {
+							toast({
+								title: res.error,
+								variant: 'destructive',
+							});
+						}
 						onOpenChange(false);
 					})
 					.catch(err => {

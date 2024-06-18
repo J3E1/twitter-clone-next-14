@@ -4,6 +4,11 @@ import Post from '@/components/post';
 import TweetForm from '@/components/tweet-form';
 import { auth } from '@/lib/auth';
 import { getPostById } from '@/lib/queries';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: 'Post',
+};
 
 export default async function PostPage({
 	params,

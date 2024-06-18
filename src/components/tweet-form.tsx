@@ -31,20 +31,22 @@ export default function TweetForm({
 			if (!input) throw new Error('Tweet can not be empty!');
 			formData.append('body', input);
 			const res = await postTweet(formData);
-			toast({
-				title: res.message,
-				variant: 'success',
-			});
+			if (res.message) {
+				toast({
+					title: res.message,
+					variant: 'success',
+				});
+			} else {
+				toast({
+					title: res.error,
+					variant: 'destructive',
+				});
+			}
 			setInput('');
 			router.refresh();
 			onOpenChange && onOpenChange(false);
 			setIsLoading(false);
 		} catch (error) {
-			console.log('🚀 ~ file: tweet-form.tsx:19 ~ submitTweet ~ error:', error);
-			toast({
-				title: (error as Error).message,
-				variant: 'destructive',
-			});
 			setIsLoading(false);
 		}
 	};
@@ -56,20 +58,22 @@ export default function TweetForm({
 			if (!input) throw new Error('Comment can not be empty!');
 			formData.append('body', input);
 			const res = await postComment(formData, postId!);
-			toast({
-				title: res.message,
-				variant: 'success',
-			});
+			if (res.message) {
+				toast({
+					title: res.message,
+					variant: 'success',
+				});
+			} else {
+				toast({
+					title: res.error,
+					variant: 'destructive',
+				});
+			}
 			setInput('');
 			router.refresh();
 			onOpenChange && onOpenChange(false);
 			setIsLoading(false);
 		} catch (error) {
-			console.log('🚀 ~ file: tweet-form.tsx:19 ~ submitTweet ~ error:', error);
-			toast({
-				title: (error as Error).message,
-				variant: 'destructive',
-			});
 			setIsLoading(false);
 		}
 	};

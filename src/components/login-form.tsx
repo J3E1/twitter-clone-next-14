@@ -57,19 +57,21 @@ export default function LoginForm({
 			session.status === 'unauthenticated' &&
 				signInAction(values)
 					.then(res => {
-						toast({
-							title: res.message,
-							variant: 'success',
-						});
+						if (res.message) {
+							toast({
+								title: res.message,
+								variant: 'success',
+							});
+						} else {
+							toast({
+								title: res.error,
+								variant: 'destructive',
+							});
+						}
 						router.refresh();
 						onOpenChange(false);
 					})
-					.catch(err => {
-						toast({
-							title: (err as Error).message,
-							variant: 'destructive',
-						});
-					});
+					.catch(err => {});
 		});
 	}
 	return (

@@ -2,6 +2,11 @@ import Header from '@/components/header';
 import Notification from '@/components/notification';
 import { Label } from '@/components/ui/label';
 import { getAllNotificationsOfCurrentUser } from '@/lib/queries';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+	title: 'Notifications',
+};
 
 export default async function NotificationPage() {
 	const notifications = await getAllNotificationsOfCurrentUser();
