@@ -1,36 +1,53 @@
 'use client';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
+import {
+	ChangeEvent,
+	Dispatch,
+	FormEvent,
+	SetStateAction,
+	useState,
+} from 'react';
 import { Button } from './ui/button';
-import { cn } from '@/lib/utils';
+import { cn, convertImageToBase64 } from '@/lib/utils';
 import { toast } from './ui/use-toast';
 import { postComment, postTweet } from '@/lib/actions';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { Input } from './ui/input';
+import { Image } from 'lucide-react';
 
 type Props = {
 	isModal?: boolean;
 	onOpenChange?: Dispatch<SetStateAction<boolean>>;
 	postId?: string;
+	isComment?: boolean;
 };
 export default function TweetForm({
 	isModal = false,
 	onOpenChange,
 	postId,
+	isComment = false,
 }: Props) {
 	const router = useRouter();
 	const session = useSession();
 	const [input, setInput] = useState('');
 	const [isLoading, setIsLoading] = useState(false);
+	const [attachedImage, setAttachedImage] = useState<File | null>(null);
 
 	const submitTweet = async (e: FormEvent) => {
 		try {
 			e.preventDefault();
 			setIsLoading(true);
-			const formData = new FormData();
 			if (!input) throw new Error('Tweet can not be empty!');
-			formData.append('body', input);
-			const res = await postTweet(formData);
+			if (input.length > 120)
+				throw new Error(
+					'You exceeded characters per tweet. 120 characters are allowed per tweet.'
+				);
+			let base64Image = attachedImage
+				? await convertImageToBase64(attachedImage as File)
+				: null;
+
+			const res = await postTweet({ body: input, image: base64Image });
 			if (res.message) {
 				toast({
 					title: res.message,
@@ -44,9 +61,14 @@ export default function TweetForm({
 			}
 			setInput('');
 			router.refresh();
+			setAttachedImage(null);
 			onOpenChange && onOpenChange(false);
 			setIsLoading(false);
 		} catch (error) {
+			toast({
+				title: (error as Error).message,
+				variant: 'destructive',
+			});
 			setIsLoading(false);
 		}
 	};
@@ -77,6 +99,30 @@ export default function TweetForm({
 			setIsLoading(false);
 		}
 	};
+
+	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+		const file = e?.target?.files ? e?.target?.files[0] : null;
+		if (file) {
+			const maxFileSizeMB = 1.5;
+			const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+			if (allowedTypes.includes(file.type)) {
+				if (file.size <= maxFileSizeMB * 1024 * 1024) {
+					setAttachedImage(file);
+				} else {
+					toast({
+						title: `File size exceeds ${maxFileSizeMB} MB limit`,
+						variant: 'destructive',
+					});
+				}
+			} else {
+				toast({
+					title: 'Invalid file type. Please select an image file (jpeg, png).',
+					variant: 'destructive',
+				});
+			}
+		}
+	};
 	return (
 		<div
 			className={cn(
@@ -104,9 +150,28 @@ export default function TweetForm({
 						className='w-full px-4 py-3 text-xl border-transparent placeholder:text-muted-foreground outline-0 focus:outline-0 focus:outline-none appearance-none focus:ring-0 focus:border-transparent bg-background'
 					/>
 				</div>
-				<div className='self-end'>
+				<div className='flex items-center justify-end'>
+					{!isComment && (
+						<div className='flex items-center justify-start flex-1'>
+							<Input
+								className='hidden'
+								type='file'
+								accept='image/*'
+								id='tweetImage'
+								onChange={handleFileChange}
+							/>
+							<label htmlFor='tweetImage'>
+								<Image className='w-5 h-5 hover:cursor-pointer' />
+							</label>
+							{attachedImage ? (
+								<span className='ml-2 text-sm'>Image selected</span>
+							) : null}
+							<span className='sr-only'>Image</span>
+						</div>
+					)}
 					<Button
 						disabled={!input || isLoading}
+						className='justify-self-end'
 						onClick={postId ? submitComment : submitTweet}>
 						Tweet
 					</Button>

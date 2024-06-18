@@ -132,7 +132,7 @@ export const getPostById = async (postId: string) => {
 						user: true,
 					},
 					orderBy: {
-						createdAt: 'desc',
+						createdAt: 'asc',
 					},
 				},
 			},

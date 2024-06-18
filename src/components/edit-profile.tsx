@@ -200,7 +200,7 @@ export default function EditProfile({ bio, name, username }: Props) {
 										)}
 									/>
 
-									<Button type='submit' className='w-full'>
+									<Button type='submit' disabled={isLoading} className='w-full'>
 										Edit
 									</Button>
 								</form>

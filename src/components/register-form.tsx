@@ -27,6 +27,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useToast } from './ui/use-toast';
 import { registerUser } from '../lib/actions';
+import OAuthButton from './o-auth-button';
 
 export default function RegisterForm({
 	setMode,
@@ -101,7 +102,10 @@ export default function RegisterForm({
 									<FormLabel>Name</FormLabel>
 									<FormControl>
 										<Input
-											disabled={isPending} placeholder='John Doe' {...field} />
+											disabled={isPending}
+											placeholder='John Doe'
+											{...field}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -115,7 +119,10 @@ export default function RegisterForm({
 									<FormLabel>Username</FormLabel>
 									<FormControl>
 										<Input
-											disabled={isPending} placeholder='john@56' {...field} />
+											disabled={isPending}
+											placeholder='john@56'
+											{...field}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -129,7 +136,10 @@ export default function RegisterForm({
 									<FormLabel>Email</FormLabel>
 									<FormControl>
 										<Input
-											disabled={isPending} placeholder='john@doe.com' {...field} />
+											disabled={isPending}
+											placeholder='john@doe.com'
+											{...field}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -171,9 +181,7 @@ export default function RegisterForm({
 						<Button disabled={isPending} type='submit' className='w-full'>
 							Register
 						</Button>
-						<Button disabled={isPending} variant='outline' className='w-full'>
-							Continue with Google
-						</Button>
+						<OAuthButton />
 					</form>
 				</Form>
 				<div className='mt-4 text-center text-sm'>

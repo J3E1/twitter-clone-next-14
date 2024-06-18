@@ -15,16 +15,22 @@ export const signInAction = async (values: LoginSchema) => {
 		revalidatePath('/');
 		return { message: 'Sign in successful' };
 	} catch (error) {
-		if(error instanceof Error){
-			return { error: error.message}
+		if (error instanceof Error) {
+			return { error: error.message };
 		} else {
 			console.log('🚀 ~ file: actions.ts:22 ~ signInAction ~ error:', error);
-			return { error: 'Something went wrong!'}
+			return { error: 'Something went wrong!' };
 		}
 	}
 };
 
-export const postTweet = async (post: FormData) => {
+export const postTweet = async ({
+	body,
+	image,
+}: {
+	body: string;
+	image: string | null;
+}) => {
 	try {
 		const session = await auth();
 		const userId = session?.user?.id;
@@ -32,22 +38,23 @@ export const postTweet = async (post: FormData) => {
 		if (!session || !userId)
 			throw new Error('You need to be logged in to post a tweet');
 
-		if (!post.get('body')) throw new Error('Tweet cannot be empty');
+		if (!body) throw new Error('Tweet cannot be empty');
 
 		const tweet = await prisma.post.create({
 			data: {
-				body: post.get('body') as string,
-				userId: userId,
+				body,
+				userId,
+				image,
 			},
 		});
 
 		return { message: 'Tweet created' };
 	} catch (error) {
-		if(error instanceof Error){
-			return { error: error.message}
+		if (error instanceof Error) {
+			return { error: error.message };
 		} else {
 			console.log('🚀 ~ file: actions.ts:43 ~ postTweet ~ error:', error);
-			return { error: 'Something went wrong!'}
+			return { error: 'Something went wrong!' };
 		}
 	}
 };
@@ -76,11 +83,11 @@ export const postComment = async (form: FormData, postId: string) => {
 
 		return { message: 'Comment added' };
 	} catch (error) {
-		if(error instanceof Error){
-			return { error: error.message}
+		if (error instanceof Error) {
+			return { error: error.message };
 		} else {
 			console.log('🚀 ~ file: actions.ts:106 ~ submitComment ~ error:', error);
-			return { error: 'Something went wrong!'}
+			return { error: 'Something went wrong!' };
 		}
 	}
 };
@@ -130,11 +137,11 @@ export const likePost = async (postId: string) => {
 
 		return { message: liked ? 'Liked' : 'Like removed' };
 	} catch (error) {
-		if(error instanceof Error){
-			return { error: error.message}
+		if (error instanceof Error) {
+			return { error: error.message };
 		} else {
 			console.log('🚀 ~ file: actions.ts:114 ~ likePost ~ error:', error);
-			return { error: 'Something went wrong!'}
+			return { error: 'Something went wrong!' };
 		}
 	}
 };
@@ -196,11 +203,11 @@ export const followAction = async (userId: string) => {
 
 		return { message: followed ? 'Followed' : 'Unfollowed' };
 	} catch (error) {
-		if(error instanceof Error){
-			return { error: error.message}
+		if (error instanceof Error) {
+			return { error: error.message };
 		} else {
 			console.log('🚀 ~ file: queries.ts:139 ~ followAction ~ error:', error);
-			return { error: 'Something went wrong!'}
+			return { error: 'Something went wrong!' };
 		}
 	}
 };
@@ -223,11 +230,11 @@ export const registerUser = async (values: RegisterSchema) => {
 		});
 		return { message: 'Sign up successful' };
 	} catch (error) {
-		if(error instanceof Error){
-			return { error: error.message}
+		if (error instanceof Error) {
+			return { error: error.message };
 		} else {
 			console.log('🚀 ~ file: actions.ts:148 ~ registerUser ~ error:', error);
-			return { error: 'Something went wrong!'}
+			return { error: 'Something went wrong!' };
 		}
 	}
 };

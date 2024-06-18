@@ -22,7 +22,8 @@ export const PUT = async (req: NextRequest, res: NextResponse) => {
 		if (!session || !currentUserId) throw new Error('You need to be logged in');
 
 		// Validate input data
-		const validatedData = editUserSchema.parse(req.body);
+		const validatedData = editUserSchema.parse(await req.json());
+
 
 		const user = await prisma.user.findUnique({
 			where: {

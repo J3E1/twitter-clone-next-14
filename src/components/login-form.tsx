@@ -27,6 +27,7 @@ import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { signInAction } from '@/lib/actions';
 import { useToast } from './ui/use-toast';
+import OAuthButton from './o-auth-button';
 
 export default function LoginForm({
 	setMode,
@@ -140,9 +141,7 @@ export default function LoginForm({
 						<Button type='submit' className='w-full' disabled={isPending}>
 							Login
 						</Button>
-						<Button variant='outline' className='w-full' disabled={isPending}>
-							Continue with Google
-						</Button>
+						<OAuthButton />
 					</form>
 				</Form>
 				<div className='mt-4 text-center text-sm'>

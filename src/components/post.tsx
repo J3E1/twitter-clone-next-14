@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { MouseEvent } from 'react';
 import RedirectTo from './redirect-to-user';
 import LikeButton from './like-button';
+import Image from 'next/image';
 
 type Props = {
 	name: string;
@@ -17,7 +18,7 @@ type Props = {
 	image: string | null | undefined;
 	comments: number;
 	likes: number;
-	liked:boolean;
+	liked: boolean;
 };
 export default function Post({
 	body,
@@ -29,7 +30,8 @@ export default function Post({
 	profileImage,
 	username,
 	comments,
-	likes,liked
+	likes,
+	liked,
 }: Props) {
 	const date = formatDistanceToNowStrict(new Date(postedAt));
 
@@ -56,6 +58,17 @@ export default function Post({
 					</RedirectTo>
 				</div>
 				<div className='text-sm text-foreground mb-4'>{body}</div>
+				{image ? (
+					<div className='w-full relative -z-10 h-80 mb-4'>
+						<Image
+							className='rounded-3xl'
+							src={image}
+							alt='Tweet image'
+							fill
+							style={{ objectFit: 'cover' }}
+						/>
+					</div>
+				) : null}
 				<div>
 					<ul className='flex gap-x-5 xl:gap-x-6 text-xs text-muted-foreground'>
 						<li className='flex items-center hover:cursor-pointer hover:text-foreground justify-center gap-x-2'>

@@ -37,7 +37,7 @@ export default async function PostPage({
 					liked={post.likedIds.includes(session?.user.id || '')}
 				/>
 			</div>
-			{session ? <TweetForm postId={post.id} /> : null}
+			{session ? <TweetForm postId={post.id} isComment/> : null}
 			<CommentsFeed
 				comments={post.comments as Array<Comment & { user: User }>}
 			/>
