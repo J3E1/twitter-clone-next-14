@@ -15,7 +15,7 @@ export default function TweetDialog() {
 				<Button
 					className='h-10 w-10 lg:h-12 lg:w-full mt-5 space-x-4'
 					size={'icon'}>
-					<Feather className='w-6 h-6' />
+					<Feather className='h-4 w-4 sm:w-6 sm:h-6' />
 					<span className='hidden lg:inline font-semibold'>Tweet</span>
 				</Button>
 			</DialogTrigger>

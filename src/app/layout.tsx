@@ -29,11 +29,11 @@ export const metadata: Metadata = {
 		title: 'Litter',
 		description:
 			'Litter - Connect and share with friends and the world around you.',
-		url: 'https://litter-v2.vercel.app/',
+		url: 'https://litter-v2.vercel.app',
 		siteName: 'Litter',
 		images: [
 			{
-				url: '/image.jpg',
+				url: '/opengraph-image.jpg',
 				width: 1200,
 				height: 630,
 				alt: 'Litter',

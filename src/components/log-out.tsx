@@ -48,7 +48,7 @@ export default function LogoutButton() {
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
 				<button className='flex items-center space-x-4 px-4 lg:pl-4 lg:pr-5 py-3 hover:bg-foreground/10 text-foreground my-1 max-w-fit rounded-full'>
-					<LogOutIcon className='w-6 h-6' />
+					<LogOutIcon className='h-4 w-4 sm:w-6 sm:h-6' />
 					<span className='hidden lg:inline-flex flex-none text-lg font-medium'>
 						Logout
 					</span>

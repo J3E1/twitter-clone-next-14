@@ -26,16 +26,16 @@ interface NavLinkItem {
 
 export default async function Nav({ session }: { session: Session | null }) {
 	return (
-		<header className='flex w-14 mx-0 lg:mx-2 xl:mx-0 lg:col-span-2 '>
+		<header className='flex w-10 sm:w-14 mx-0 lg:mx-2 xl:mx-0 lg:col-span-2 '>
 			<div className='flex flex-1 lg:w-48 xl:w-60 flex-col fixed h-full'>
 				<div className='flex flex-col flex-1 items-center lg:items-stretch'>
 					<NavItem href='/home'>
-						<TwitterIcon className='h-6 w-6' />
+						<TwitterIcon className='h-4 w-4 sm:h-6 sm:w-6' />
 					</NavItem>
 					{session ? (
 						<>
 							<NavItem href='/'>
-								<Home className='w-6 h-6' />
+								<Home className='h-4 w-4 sm:w-6 sm:h-6' />
 								<div className='hidden lg:inline-flex flex-none text-lg font-medium'>
 									Home
 								</div>
@@ -43,9 +43,9 @@ export default async function Nav({ session }: { session: Session | null }) {
 							<div className='rounded-lg focus:outline-none overflow-hidden'>
 								<NavItem href='/notification'>
 									{session.user.hasNotification ? (
-										<BellDot className='w-6 h-6' />
+										<BellDot className='h-4 w-4 sm:w-6 sm:h-6' />
 									) : (
-										<Bell className='w-6 h-6' />
+										<Bell className='h-4 w-4 sm:w-6 sm:h-6' />
 									)}
 
 									<div className='hidden lg:inline-flex flex-none text-lg font-medium'>
@@ -55,7 +55,7 @@ export default async function Nav({ session }: { session: Session | null }) {
 							</div>
 							<div className='rounded-lg focus:outline-none overflow-hidden'>
 								<NavItem href={`/user/${session.user.id}`}>
-									<User className='w-6 h-6' />
+									<User className='h-4 w-4 sm:w-6 sm:h-6' />
 									<div className='hidden lg:inline-flex flex-none text-lg font-medium'>
 										Profile
 									</div>

@@ -51,7 +51,7 @@ export default function Post({
 						<span className='text-foreground font-bold hover:underline'>
 							{name}
 						</span>
-						<span className='text-muted-foreground font-medium hover:underline'>
+						<span className='hidden sm:inline text-muted-foreground font-medium hover:underline'>
 							@{username}
 						</span>
 						·<span className='text-muted-foreground font-medium'>{date}</span>

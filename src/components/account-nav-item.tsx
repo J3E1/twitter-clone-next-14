@@ -6,7 +6,7 @@ import { Session } from 'next-auth';
 type Props = { session: Session | null };
 export default async function AccountNavItem({ session }: Props) {
 	return (
-		<div className='flex flex-1 items-center gap-x-2 px-4 py-8 '>
+		<div className='flex flex-1 items-center gap-x-2 px-2 sm:px-4 py-8 '>
 			{session ? (
 				<div className='hidden lg:flex items-center gap-x-3 flex-1'>
 					<div className='flex flex-1 lg:flex-none justify-center lg:justify-start'>
@@ -22,7 +22,7 @@ export default async function AccountNavItem({ session }: Props) {
 					</div>
 					<div className='hidden lg:flex flex-col'>
 						<p className='text-base font-semibold'>{session.user.name}</p>
-						<p className='text-sm text-muted-foreground font-medium'>
+						<p className='hidden xl:block text-sm text-muted-foreground font-medium'>
 							@{session.user.username}
 						</p>
 					</div>
