@@ -19,6 +19,7 @@ const fontSans = Inter({
 });
 
 export const metadata: Metadata = {
+	metadataBase: new URL('https://litter-v2.vercel.app'),
 	title: {
 		template: '%s | Litter',
 		default: 'Litter',
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
 		siteName: 'Litter',
 		images: [
 			{
-				url: '/opengraph-image.jpg',
+				url: '/image.jpg',
 				width: 1200,
 				height: 630,
 				alt: 'Litter',

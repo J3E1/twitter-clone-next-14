@@ -5,8 +5,11 @@ import prisma from './prisma';
 import { EditUserSchema, LoginSchema, RegisterSchema } from './schemas';
 import { addNotification, convertImageToBase64 } from './utils';
 import bcrypt from 'bcrypt';
+import { AuthError } from 'next-auth';
 
 export const signInAction = async (values: LoginSchema) => {
+	console.log("🚀 ~ file: actions.ts:11 ~ signInAction ~ values:", values);
+
 	try {
 		const res = await signIn('credentials', {
 			...values,
@@ -15,10 +18,11 @@ export const signInAction = async (values: LoginSchema) => {
 		revalidatePath('/');
 		return { message: 'Sign in successful' };
 	} catch (error) {
-		if (error instanceof Error) {
-			return { error: error.message };
+		if (error instanceof AuthError) {
+			console.log("🚀 ~ file: actions.ts:20 ~ signInAction ~ error:", error);
+
+			return { error: error.message.split('!')[0] };
 		} else {
-			console.log('🚀 ~ file: actions.ts:22 ~ signInAction ~ error:', error);
 			return { error: 'Something went wrong!' };
 		}
 	}

@@ -1,4 +1,8 @@
-import NextAuth, { DefaultSession } from 'next-auth';
+import NextAuth, {
+	AuthError,
+	DefaultSession,
+	CredentialsSignin,
+} from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { loginSchema } from './schemas';
 import prisma from '@/lib/prisma';
@@ -41,33 +45,30 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 				password: {},
 			},
 			authorize: async credentials => {
-				try {
-					const { email, password } = await loginSchema.parseAsync(credentials);
+				const { email, password } = await loginSchema.parseAsync(credentials);
 
-					const user = await prisma.user.findUnique({
-						where: {
-							email: email,
-						},
-						select: {
-							id: true,
-							hashedPassword: true,
-						},
-					});
+				const user = await prisma.user.findUnique({
+					where: {
+						email: email,
+					},
+					select: {
+						id: true,
+						hashedPassword: true,
+					},
+				});
 
-					if (!user) {
-						throw new Error('User not found.');
-					}
-					const isPasswordIncorrect = await bcrypt.compare(
-						password,
-						user.hashedPassword
-					);
-
-					if (!isPasswordIncorrect) throw new Error('Invalid password');
-
-					return user;
-				} catch (error) {
-					return null;
+				if (!user) {
+					throw new AuthError('User not found!');
 				}
+				const isPasswordIncorrect = await bcrypt.compare(
+					password,
+					user.hashedPassword
+				);
+
+				if (!isPasswordIncorrect) {
+					throw new AuthError('Invalid Password!');
+				}
+				return user;
 			},
 		}),
 	],

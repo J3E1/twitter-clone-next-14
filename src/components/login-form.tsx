@@ -63,14 +63,14 @@ export default function LoginForm({
 								title: res.message,
 								variant: 'success',
 							});
+							router.refresh();
+							onOpenChange(false);
 						} else {
 							toast({
 								title: res.error,
 								variant: 'destructive',
 							});
 						}
-						router.refresh();
-						onOpenChange(false);
 					})
 					.catch(err => {});
 		});
