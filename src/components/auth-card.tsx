@@ -26,7 +26,7 @@ export default function AuthCard() {
 				onClick={() => setOpen(true)}
 				className='h-10 w-10 mt-5 lg:hidden'
 				size={'icon'}>
-				<PlusIcon className='w-6 h-6' />
+				<PlusIcon className='w-4 h-4 sm:w-6 sm:h-6' />
 			</Button>
 			<Card className='hidden lg:block mt-3'>
 				<CardHeader>
