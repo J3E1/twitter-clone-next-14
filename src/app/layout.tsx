@@ -26,25 +26,6 @@ export const metadata: Metadata = {
 	},
 	description:
 		'Litter - A modern Twitter clone built with Next.js 14, showcasing the latest web technologies and design patterns.',
-	openGraph: {
-		title: 'Litter',
-		description:
-			'Litter - Connect and share with friends and the world around you.',
-		url: 'https://litter-v2.vercel.app',
-		siteName: 'Litter',
-		images: [
-			{
-				url: '/image.jpg',
-				width: 1200,
-				height: 630,
-				alt: 'Litter',
-			},
-		],
-		type: 'website',
-	},
-	icons: {
-		icon: '/favicon.ico',
-	},
 };
 
 export default async function RootLayout({
